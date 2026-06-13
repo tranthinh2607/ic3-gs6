@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IC3 GS6 Level 3 - Ứng Dụng Trắc Nghiệm Ôn Thi Premium</title>
+    
+    <!-- Google Fonts: Inter & Outfit for modern, premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for sleek visual micro-icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" href="style.css?v=1.0.2">
+</head>
+<body>
+
+    <!-- WELCOME SCREEN CONTAINER -->
+    <div id="welcome-screen" class="welcome-screen-container">
+        <div class="welcome-card">
+            <div class="welcome-logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <h2 id="welcome-title">Luyện Thi IC3 GS6</h2>
+            <p class="welcome-subtitle" id="welcome-subtitle">Hệ thống trắc nghiệm ôn tập thông minh chất lượng cao</p>
+            
+            <div class="level-selector-container">
+                <button class="level-tab active" id="level-tab-3" data-level="3">
+                    <i class="fa-solid fa-gauge-high"></i> Level 3 (Nâng cao)
+                </button>
+                <button class="level-tab" id="level-tab-2" data-level="2">
+                    <i class="fa-solid fa-gauge"></i> Level 2 (Trung cấp)
+                </button>
+                <button class="level-tab" id="level-tab-1" data-level="1">
+                    <i class="fa-solid fa-gauge-simple"></i> Level 1 (Cơ bản)
+                </button>
+            </div>
+            
+            <div class="mode-selection-container">
+                <!-- Mode 1: Full Exam -->
+                <div class="mode-card active" id="mode-full">
+                    <div class="mode-icon"><i class="fa-solid fa-laptop"></i></div>
+                    <h3>Thi thử Full câu hỏi</h3>
+                    <p class="mode-desc">Làm toàn bộ đề thi thử tổng hợp tất cả chủ đề ôn luyện.</p>
+                    <span class="mode-meta" id="full-exam-meta"><i class="fa-solid fa-circle-question"></i> 0 câu hỏi • <i class="fa-solid fa-clock"></i> 50 phút</span>
+                </div>
+                
+                <!-- Mode 2: Topic Practice -->
+                <div class="mode-card" id="mode-topic">
+                    <div class="mode-icon"><i class="fa-solid fa-list"></i></div>
+                    <h3>Luyện tập theo Chủ đề</h3>
+                    <p class="mode-desc">Luyện tập củng cố kiến thức từng chủ đề chuyên biệt.</p>
+                    <div class="select-wrapper">
+                        <!-- Hidden native select for standard app compatibility -->
+                        <select id="welcome-topic-select" class="select-input select-welcome" style="display: none;">
+                            <option value="">-- Chọn chủ đề ôn thi --</option>
+                        </select>
+                        
+                        <!-- Custom Select Trigger and Options Container (Glassmorphic) -->
+                        <div class="custom-select-container" id="custom-select-container">
+                            <div class="custom-select-trigger" id="custom-select-trigger">
+                                <span>-- Chọn chủ đề ôn thi --</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="custom-select-options-wrapper" id="custom-select-options-wrapper">
+                                <!-- Dynamically loaded by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mode 3: Random 50 Questions Mock Exam -->
+                <div class="mode-card" id="mode-random50">
+                    <div class="mode-icon"><i class="fa-solid fa-shuffle"></i></div>
+                    <h3>Thi thử 50 câu random</h3>
+                    <p class="mode-desc">Thi thử ngẫu nhiên 50 câu từ tất cả chủ đề, không trùng lặp.</p>
+                    <span class="mode-meta"><i class="fa-solid fa-circle-question"></i> 50 câu hỏi • <i class="fa-solid fa-clock"></i> 50 phút</span>
+                </div>
+            </div>
+            
+            <button class="start-quiz-btn" id="start-quiz-btn">
+                Bắt đầu ôn thi ngay <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="app" class="app-container" style="display: none;">
+        
+        <!-- HEADER SECTION -->
+        <header class="app-header">
+            <div class="header-logo">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>IC3 GS6</h1>
+                    <span id="header-level-text">Level 3 • Practice Exam</span>
+                </div>
+            </div>
+            
+            <div class="header-progress">
+                <div class="progress-info">
+                    <span id="progress-text">Tiến độ: 0 / 255 (0%)</span>
+                    <span id="flagged-count"><i class="fa-solid fa-flag text-warning"></i> 0</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <div class="header-timer">
+                <button class="header-home-btn" id="header-home-btn">
+                    <i class="fa-solid fa-house"></i> Trang chủ
+                </button>
+                <div class="timer-card">
+                    <i class="fa-regular fa-clock"></i>
+                    <span id="timer-display">50:00</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENT BODY -->
+        <main class="app-body">
+            
+            <!-- SIDEBAR: Question Navigation Grid -->
+            <aside class="app-sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <h2>Danh sách câu hỏi</h2>
+                    <p>Nhấp vào ô số để chuyển câu hỏi nhanh</p>
+                </div>
+                
+                <div class="sidebar-filters">
+                    <button class="filter-btn active" data-filter="all">Tất cả</button>
+                    <button class="filter-btn" data-filter="answered">Đã làm</button>
+                    <button class="filter-btn" data-filter="unanswered">Chưa làm</button>
+                    <button class="filter-btn" data-filter="flagged">Đã lưu</button>
+                </div>
+                
+                <div class="question-grid" id="question-grid">
+                    <!-- 255 cells will be dynamically generated by JS -->
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT AREA -->
+            <section class="quiz-area">
+                
+                <!-- TOP BANNER BAR -->
+                <div class="topic-banner">
+                    <div class="topic-badge">
+                        <i class="fa-solid fa-tags"></i>
+                        <span id="current-topic-text">Chủ đề 1: Căn Bản Về Công Nghệ</span>
+                    </div>
+                    <div class="question-number-badge">
+                        Câu <span id="current-q-num">1</span>/<span id="total-q-num">255</span>
+                    </div>
+                </div>
+
+                <!-- QUIZ PANEL CONTAINER -->
+                <div class="quiz-card" id="quiz-card">
+                    
+                    <!-- Question Area -->
+                    <div class="question-container">
+                        <p class="question-text" id="question-text">Đang tải câu hỏi...</p>
+                    </div>
+
+                    <!-- Image Area Placeholder (shown if has_image is true) -->
+                    <div class="image-placeholder-container" id="image-placeholder-container" style="display: none;">
+                        <img id="question-img" src="" alt="Hình ảnh minh họa câu hỏi" style="display: none; max-width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-md); margin: 0 auto 1.5rem auto;">
+                        <!-- Actual Video Tag -->
+                        <video id="question-video" controls style="display: none; max-width: 100%; max-height: 380px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-md); margin: 0 auto 1.5rem auto;"></video>
+                        <!-- Placeholder Card -->
+                        <div class="image-placeholder" id="image-placeholder-default">
+                            <i class="fa-regular fa-image"></i>
+                            <p>Hình ảnh minh họa</p>
+                            <span>(Nhấp đúp hoặc đổi ảnh thật trong questions.json)</span>
+                        </div>
+                    </div>
+
+                    <!-- Options Area (Dynamic Render by JS) -->
+                    <div class="options-container" id="options-container">
+                        <!-- Render templates for single/multiple/grid/sorting/matching -->
+                    </div>
+                    
+                </div>
+
+                <!-- NAVIGATION FOOTER -->
+                <footer class="quiz-footer">
+                    <button class="nav-btn prev-btn" id="prev-btn" disabled>
+                        <i class="fa-solid fa-arrow-left"></i> Câu trước
+                    </button>
+                    
+                    <button class="nav-btn flag-btn" id="flag-btn">
+                        <i class="fa-regular fa-flag"></i> Đánh dấu câu khó
+                    </button>
+                    
+                    <div class="nav-right">
+                        <button class="nav-btn next-btn" id="next-btn">
+                            Câu tiếp <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <button class="submit-btn" id="submit-btn">
+                            <i class="fa-solid fa-paper-plane"></i> Nộp bài làm
+                        </button>
+                    </div>
+                </footer>
+                
+            </section>
+        </main>
+        
+        <!-- SUBMIT DOUBLE-CONFIRMATION MODAL -->
+        <div class="modal-overlay" id="confirm-modal">
+            <div class="modal-card">
+                <div class="modal-icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3>Bạn muốn nộp bài làm chứ?</h3>
+                <p id="modal-summary-text">Bạn đã làm 0 / 255 câu. Còn lại 255 câu chưa trả lời.</p>
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel-btn" id="modal-cancel">Làm tiếp</button>
+                    <button class="modal-btn confirm-btn" id="modal-confirm">Nộp bài ngay</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTS VIEW PANEL (Hidden initially) -->
+        <div class="results-container" id="results-panel" style="display: none;">
+            <div class="results-header">
+                <h2>Kết Quả Làm Bài</h2>
+                <p>Kỳ thi ôn tập trắc nghiệm IC3 GS6 Level 3</p>
+            </div>
+            
+            <div class="results-summary-card">
+                <div class="score-circle-container">
+                    <svg class="score-ring" width="200" height="200">
+                        <circle class="ring-bg" cx="100" cy="100" r="85"></circle>
+                        <circle class="ring-fill" id="ring-fill" cx="100" cy="100" r="85" stroke-dasharray="534" stroke-dashoffset="534"></circle>
+                    </svg>
+                    <div class="score-value">
+                        <span id="score-display">0</span>
+                        <p>/1000 điểm</p>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Tổng số câu đúng</span>
+                        <span class="stat-value text-success" id="correct-count">0 / 255</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Tổng số câu sai</span>
+                        <span class="stat-value text-danger" id="incorrect-count">0 / 255</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Thời gian làm bài</span>
+                        <span class="stat-value text-primary" id="time-spent">00:00</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Đánh giá chung</span>
+                        <span class="stat-value" id="evaluation-text" style="font-weight: 700;">CHƯA ĐẠT</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="results-actions">
+                <button class="result-btn restart-btn" id="restart-btn">
+                    <i class="fa-solid fa-rotate-right"></i> Làm bài thi mới
+                </button>
+                <button class="result-btn review-btn" id="review-btn-action">
+                    <i class="fa-solid fa-magnifying-glass"></i> Xem lại bài làm
+                </button>
+            </div>
+        </div>
+
+        <!-- REVIEW BANNER (Only visible in review mode) -->
+        <div class="review-banner-top" id="review-banner-top" style="display: none;">
+            <div class="review-status">
+                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                <span>Chế độ Xem lại bài làm (Đang hiển thị đáp án đúng/sai)</span>
+            </div>
+            <button class="result-btn restart-btn btn-sm" id="exit-review-btn">
+                Quay lại Bảng Điểm
+            </button>
+        </div>
+
+    </div>
+
+    <!-- QUESTIONS DATABASES -->
+    <script src="questions.js?v=1.0.2"></script>
+    <script src="questions_level2.js?v=1.0.2"></script>
+    <script src="questions_level1.js?v=1.0.2"></script>
+    
+    <!-- MAIN APP JAVASCRIPT -->
+    <script src="app.js?v=1.0.2"></script>
+</body>
+</html>
