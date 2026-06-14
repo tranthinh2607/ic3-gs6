@@ -147,7 +147,7 @@ function populateTopics() {
     });
     
     // 1. Populate native hidden select (for compatibility)
-    topicSelect.innerHTML = '<option value="">-- Chọn chủ đề ôn thi --</option>';
+    topicSelect.innerHTML = '<option value="">-- Chọn chủ đề luyện tập --</option>';
     Object.keys(topicsMap).sort().forEach(topic => {
         const count = topicsMap[topic];
         const option = document.createElement('option');
@@ -165,7 +165,7 @@ function populateTopics() {
         // Add default option
         const defaultOpt = document.createElement('div');
         defaultOpt.className = 'custom-select-option selected';
-        defaultOpt.innerHTML = `<span>-- Chọn chủ đề ôn thi --</span>`;
+        defaultOpt.innerHTML = `<span>-- Chọn chủ đề luyện tập --</span>`;
         defaultOpt.setAttribute('data-value', '');
         customWrapper.appendChild(defaultOpt);
         
@@ -183,7 +183,7 @@ function populateTopics() {
         });
         
         // Reset trigger text
-        customTrigger.querySelector('span').innerText = '-- Chọn chủ đề ôn thi --';
+        customTrigger.querySelector('span').innerText = '-- Chọn chủ đề luyện tập --';
         
         // Add option click listeners
         const allCustomOpts = customWrapper.querySelectorAll('.custom-select-option');
@@ -199,7 +199,7 @@ function populateTopics() {
                 if (val) {
                     customTrigger.querySelector('span').innerText = val;
                 } else {
-                    customTrigger.querySelector('span').innerText = '-- Chọn chủ đề ôn thi --';
+                    customTrigger.querySelector('span').innerText = '-- Chọn chủ đề luyện tập --';
                 }
                 
                 // Update hidden native select and dispatch native event
@@ -220,7 +220,7 @@ function resetCustomSelect() {
     const customTrigger = document.getElementById('custom-select-trigger');
     const customWrapper = document.getElementById('custom-select-options-wrapper');
     if (customTrigger && customWrapper) {
-        customTrigger.querySelector('span').innerText = '-- Chọn chủ đề ôn thi --';
+        customTrigger.querySelector('span').innerText = '-- Chọn chủ đề luyện tập --';
         const allOpts = customWrapper.querySelectorAll('.custom-select-option');
         allOpts.forEach(o => {
             o.classList.remove('selected');
@@ -1845,13 +1845,27 @@ function setupEventListeners() {
             if (isSubmitted) {
                 returnToWelcomeScreen();
             } else {
-                if (confirm('Bạn có chắc chắn muốn hủy lượt làm bài hiện tại và quay về Trang chủ? (Tiến độ làm bài của bạn sẽ không được lưu)')) {
+                if (confirm('Bạn có chắc chắn muốn hủy lượt làm bài hiện tại và quay về Trang chủ? (Tiến độ làm bài của bạn sẽ không được lưu.)')) {
                     returnToWelcomeScreen();
                 }
             }
         });
     }
-    
+
+    // Header Logo Icon Click Action
+    const headerLogoIcon = document.querySelector('.logo-icon-btn');
+    if (headerLogoIcon) {
+        headerLogoIcon.addEventListener('click', () => {
+            if (isSubmitted) {
+                returnToWelcomeScreen();
+            } else {
+                if (confirm('Bạn có chắc chắn muốn hủy lượt làm bài hiện tại và quay về Trang chủ? (Tiến độ làm bài của bạn sẽ không được lưu.)')) {
+                    returnToWelcomeScreen();
+                }
+            }
+        });
+    }
+
     // Enter Review Mode
     document.getElementById('review-btn-action').addEventListener('click', () => {
         document.getElementById('results-panel').style.display = 'none';

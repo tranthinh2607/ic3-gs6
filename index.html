@@ -28,14 +28,14 @@
             <p class="welcome-subtitle" id="welcome-subtitle">Hệ thống trắc nghiệm ôn tập thông minh chất lượng cao</p>
             
             <div class="level-selector-container">
-                <button class="level-tab active" id="level-tab-3" data-level="3">
-                    <i class="fa-solid fa-gauge-high"></i> Level 3 (Nâng cao)
+                <button class="level-tab" id="level-tab-1" data-level="1">
+                    <i class="fa-solid fa-gauge-simple"></i> Level 1 (Cơ bản)
                 </button>
                 <button class="level-tab" id="level-tab-2" data-level="2">
                     <i class="fa-solid fa-gauge"></i> Level 2 (Trung cấp)
                 </button>
-                <button class="level-tab" id="level-tab-1" data-level="1">
-                    <i class="fa-solid fa-gauge-simple"></i> Level 1 (Cơ bản)
+                <button class="level-tab active" id="level-tab-3" data-level="3">
+                    <i class="fa-solid fa-gauge-high"></i> Level 3 (Nâng cao)
                 </button>
             </div>
             
@@ -43,7 +43,7 @@
                 <!-- Mode 1: Full Exam -->
                 <div class="mode-card active" id="mode-full">
                     <div class="mode-icon"><i class="fa-solid fa-laptop"></i></div>
-                    <h3>Thi thử Full câu hỏi</h3>
+                    <h3>Thi thử full câu hỏi</h3>
                     <p class="mode-desc">Làm toàn bộ đề thi thử tổng hợp tất cả chủ đề ôn luyện.</p>
                     <span class="mode-meta" id="full-exam-meta"><i class="fa-solid fa-circle-question"></i> 0 câu hỏi • <i class="fa-solid fa-clock"></i> 50 phút</span>
                 </div>
@@ -51,18 +51,18 @@
                 <!-- Mode 2: Topic Practice -->
                 <div class="mode-card" id="mode-topic">
                     <div class="mode-icon"><i class="fa-solid fa-list"></i></div>
-                    <h3>Luyện tập theo Chủ đề</h3>
+                    <h3>Luyện tập theo chủ đề</h3>
                     <p class="mode-desc">Luyện tập củng cố kiến thức từng chủ đề chuyên biệt.</p>
                     <div class="select-wrapper">
                         <!-- Hidden native select for standard app compatibility -->
                         <select id="welcome-topic-select" class="select-input select-welcome" style="display: none;">
-                            <option value="">-- Chọn chủ đề ôn thi --</option>
+                            <option value="">-- Chọn chủ đề luyện tập --</option>
                         </select>
                         
                         <!-- Custom Select Trigger and Options Container (Glassmorphic) -->
                         <div class="custom-select-container" id="custom-select-container">
                             <div class="custom-select-trigger" id="custom-select-trigger">
-                                <span>-- Chọn chủ đề ôn thi --</span>
+                                <span>-- Chọn chủ đề luyện tập --</span>
                                 <i class="fa-solid fa-chevron-down"></i>
                             </div>
                             <div class="custom-select-options-wrapper" id="custom-select-options-wrapper">
@@ -93,8 +93,8 @@
         <!-- HEADER SECTION -->
         <header class="app-header">
             <div class="header-logo">
-                <div class="logo-icon">
-                    <i class="fa-solid fa-graduation-cap"></i>
+                <div class="logo-icon logo-icon-btn">
+                    <div class="fa-solid fa-graduation-cap"></div>
                 </div>
                 <div class="logo-text">
                     <h1>IC3 GS6</h1>

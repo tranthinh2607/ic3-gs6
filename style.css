@@ -1345,7 +1345,7 @@ body {
         font-size: 0.82rem;
         justify-content: center;
         white-space: nowrap;
-    }
+    } 
     
     /* Vertically Stacked Matching/Sorting Rows on mobile devices */
     .sorting-row, .matching-row, .dropdown-grid-row {
@@ -1397,25 +1397,6 @@ body {
         font-size: 0.85rem !important;
     }
     
-    /* Stacking Level tabs vertically on very narrow screens to prevent overlap or overflow */
-    .level-selector-container {
-        width: 100% !important;
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 0.5rem !important;
-        box-sizing: border-box !important;
-    }
-    
-    .level-tab {
-        width: 100% !important;
-        padding: 0.6rem 1rem !important;
-        font-size: 0.85rem !important;
-        justify-content: center !important;
-        white-space: nowrap !important;
-        box-sizing: border-box !important;
-        flex: none !important;
-    }
-    
     .header-home-btn {
         padding: 0.5rem 0.6rem !important;
         font-size: 0.72rem !important;
@@ -1460,11 +1441,12 @@ body {
     z-index: 1000;
 }
 
-/* Level Selector segmented tabs */
 .level-selector-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    flex-wrap: wrap;              /* Thêm */
+    
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border-color);
     padding: 6px;
@@ -1474,8 +1456,10 @@ body {
     box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.01);
     backdrop-filter: var(--glass-blur);
     gap: 0.4rem;
+
     width: fit-content;
     max-width: 100%;
+    box-sizing: border-box;     
 }
 
 .level-tab {
@@ -1489,10 +1473,27 @@ body {
     font-weight: 700;
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
     display: inline-flex;
     align-items: center;
+    justify-content: center;     
+
     gap: 0.6rem;
     white-space: nowrap;
+
+    box-sizing: border-box;      
+}
+
+@media (max-width: 768px) {
+    .level-selector-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+    .level-tab {
+        flex: 1 1 180px;
+    }
 }
 
 .level-tab:hover {
