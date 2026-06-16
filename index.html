@@ -28,13 +28,13 @@
             <p class="welcome-subtitle" id="welcome-subtitle">Hệ thống trắc nghiệm ôn tập thông minh chất lượng cao</p>
             
             <div class="level-selector-container">
-                <button class="level-tab" id="level-tab-1" data-level="1">
+                <button class="level-tab active" id="level-tab-1" data-level="1">
                     <i class="fa-solid fa-gauge-simple"></i> Level 1 (Cơ bản)
                 </button>
                 <button class="level-tab" id="level-tab-2" data-level="2">
                     <i class="fa-solid fa-gauge"></i> Level 2 (Trung cấp)
                 </button>
-                <button class="level-tab active" id="level-tab-3" data-level="3">
+                <button class="level-tab" id="level-tab-3" data-level="3">
                     <i class="fa-solid fa-gauge-high"></i> Level 3 (Nâng cao)
                 </button>
             </div>
@@ -229,7 +229,7 @@
         <div class="results-container" id="results-panel" style="display: none;">
             <div class="results-header">
                 <h2>Kết Quả Làm Bài</h2>
-                <p>Kỳ thi ôn tập trắc nghiệm IC3 GS6 Level 3</p>
+                <p id="title-level">Kỳ thi ôn tập trắc nghiệm IC3 GS6 Level </p>
             </div>
             
             <div class="results-summary-card">
@@ -288,10 +288,11 @@
     </div>
 
     <!-- QUESTIONS DATABASES -->
-    <script src="questions.js?v=1.0.2"></script>
-    <script src="questions_level2.js?v=1.0.2"></script>
-    <script src="questions_level1.js?v=1.0.2"></script>
-    
+    <script src="questions_level_1.js?v=1.0.2"></script>
+    <script src="questions_level_2.js?v=1.0.2"></script>
+    <script src="questions_level_3.js?v=1.0.2"></script>
+
+
     <!-- MAIN APP JAVASCRIPT -->
     <script src="app.js?v=1.0.2"></script>
 </body>

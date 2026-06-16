@@ -671,7 +671,10 @@ body {
 /* Active Segmented Buttons */
 .grid-choice-btn.selected[data-choice="Đúng"],
 .grid-choice-btn.selected[data-choice="Có"],
-.grid-choice-btn.selected[data-choice="Bảo vệ"] {
+.grid-choice-btn.selected[data-choice="Bảo vệ"],
+.grid-choice-btn.selected[data-choice="Máy in laser"],
+.grid-choice-btn.selected[data-choice="Máy in phun"],
+.grid-choice-btn.selected[data-choice="Không mỏi mắt"] {
     border-color: var(--success);
     background: rgba(16, 185, 129, 0.15);
     color: var(--success);
@@ -680,11 +683,27 @@ body {
 
 .grid-choice-btn.selected[data-choice="Sai"],
 .grid-choice-btn.selected[data-choice="Không"],
-.grid-choice-btn.selected[data-choice="Rủi ro"] {
+.grid-choice-btn.selected[data-choice="Rủi ro"],
+.grid-choice-btn.selected[data-choice="Mỏi mắt"],
+.grid-choice-btn.selected[data-choice="Phần Mềm Ứng Dụng"],
+.grid-choice-btn.selected[data-choice="phần mềm Ứng dụng"] {
     border-color: var(--danger);
     background: rgba(239, 68, 68, 0.15);
     color: var(--danger);
     box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+.grid-choice-btn.selected[data-choice="Phần Mềm Hệ Thống"],
+.grid-choice-btn.selected[data-choice="phần mềm Hệ thống"],
+.grid-choice-btn.selected[data-choice="Google"],
+.grid-choice-btn.selected[data-choice="Microsoft"],
+.grid-choice-btn.selected[data-choice="Apple"],
+.grid-choice-btn.selected[data-choice="Hàng hóa"],
+.grid-choice-btn.selected[data-choice="Dịch vụ"] {
+    border-color: var(--secondary);
+    background: rgba(6, 182, 212, 0.15);
+    color: var(--secondary);
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
 }
 
 /* Review highlight states in grids */
@@ -1922,7 +1941,7 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 38px;
+    min-height: 40px;
     padding: 0 0.8rem;
     background: rgba(12, 16, 29, 0.75);
     border: 2px solid var(--border-color);

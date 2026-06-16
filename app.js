@@ -8,7 +8,7 @@
 // ==========================================================================
 let allQuestions = [];          // Stores the complete list of questions
 let questions = [];             // Stores the active list of questions for the session
-let currentLevel = 3;           // Stores the currently selected level: 2 or 3
+let currentLevel = 1;           // Stores the currently selected level: 1 or 2 or 3
 let selectedMode = 'full';      // 'full', 'topic', or 'random50'
 let selectedTopic = '';         // Selected topic string
 let userAnswers = {};           // Stores user selections: { questionId: answer }
@@ -72,6 +72,9 @@ async function switchLevel(level) {
     
     // Populate the topic select dynamically
     populateTopics();
+
+    // Update title level after submit your assignment
+    document.getElementById('title-level').textContent = `Kỳ thi ôn tập trắc nghiệm IC3 GS6 Level ${currentLevel}`;
 }
 
 /**
@@ -100,18 +103,18 @@ function updateLevelUITexts() {
  * and falls back to corresponding window.quizQuestions defined in level JS files (offline mode).
  */
 async function loadQuestions() {
-    let filename = 'questions.json';
-    let fallbackVar = window.quizQuestions;
-    let fallbackName = 'questions.js';
+    let filename = 'questions_level_1.json';
+    let fallbackVar = window.quizQuestionsLevel1;
+    let fallbackName = 'questions_level_1.js';
     
     if (currentLevel === 2) {
-        filename = 'questions_level2.json';
+        filename = 'questions_level_2.json';
         fallbackVar = window.quizQuestionsLevel2;
-        fallbackName = 'questions_level2.js';
-    } else if (currentLevel === 1) {
-        filename = 'questions_level1.json';
-        fallbackVar = window.quizQuestionsLevel1;
-        fallbackName = 'questions_level1.js';
+        fallbackName = 'questions_level_2.js';
+    } else if (currentLevel === 3) {
+        filename = 'questions_level_3.json';
+        fallbackVar = window.quizQuestionsLevel3;
+        fallbackName = 'questions_level_3.js';
     }
     
     try {
@@ -296,7 +299,7 @@ function prepareQuestionsWithOptionsShuffled(origQuestions) {
     const shuffledList = JSON.parse(JSON.stringify(origQuestions));
     
     // Shuffles the question list order
-    if (currentLevel !== 1 || selectedMode === 'random50') {
+    if (/*currentLevel === 1 ||*/ currentLevel === 2 || currentLevel === 3 || selectedMode === 'random50') {
         shuffleArray(shuffledList);
     }
     
@@ -359,33 +362,39 @@ function prepareQuestionsWithOptionsShuffled(origQuestions) {
 
 /**
  * Deduplicates questions by text similarity and option overlap to prevent duplicates
+ * Allows same question text with different answers (variant questions)
  */
 function deduplicateQuestionsList(array) {
     const result = [];
-    
+
     for (let i = 0; i < array.length; i++) {
         const q1 = array[i];
         let isDuplicate = false;
-        
+
         for (let j = 0; j < result.length; j++) {
             const q2 = result[j];
-            
+
             // Check if question text, type, and options length are the same
             if (q1.question.trim().toLowerCase() === q2.question.trim().toLowerCase() && q1.type === q2.type) {
                 if (q1.type === 'single' || q1.type === 'multiple') {
                     const opts1 = q1.options.map(o => o.text.trim().toLowerCase());
                     const opts2 = q2.options.map(o => o.text.trim().toLowerCase());
-                    
+
                     let matches = 0;
                     opts1.forEach(o1 => {
                         if (opts2.some(o2 => o2 === o1)) {
                             matches++;
                         }
                     });
-                    
+
+                    // Only consider it a duplicate if answers are also the same
                     if (matches >= 2) {
-                        isDuplicate = true;
-                        break;
+                        const ans1 = Array.isArray(q1.answers) ? q1.answers.sort().join(',') : q1.answers;
+                        const ans2 = Array.isArray(q2.answers) ? q2.answers.sort().join(',') : q2.answers;
+                        if (ans1 === ans2) {
+                            isDuplicate = true;
+                            break;
+                        }
                     }
                 } else if (q1.type === 'hotspot') {
                     if (q1.image_file === q2.image_file) {
@@ -395,14 +404,14 @@ function deduplicateQuestionsList(array) {
                 } else if (q1.options && q2.options) {
                     const opts1 = q1.options.map(o => o.trim().toLowerCase());
                     const opts2 = q2.options.map(o => o.trim().toLowerCase());
-                    
+
                     let matches = 0;
                     opts1.forEach(o1 => {
                         if (opts2.some(o2 => o2 === o1)) {
                             matches++;
                         }
                     });
-                    
+
                     if (matches >= 2) {
                         isDuplicate = true;
                         break;
@@ -410,12 +419,12 @@ function deduplicateQuestionsList(array) {
                 }
             }
         }
-        
+
         if (!isDuplicate) {
             result.push(q1);
         }
     }
-    
+
     return result;
 }
 
@@ -857,7 +866,7 @@ function renderGrid(q, container) {
             }
         });
     }
-    
+
     // Normalize and standardize the column headers list for consistent presentation:
     if (choices.includes('Đúng') || choices.includes('Sai')) {
         choices.length = 0;
@@ -874,16 +883,24 @@ function renderGrid(q, container) {
     } else if (choices.includes('Không mỏi mắt') || choices.includes('Mỏi mắt')) {
         choices.length = 0;
         choices.push('Không mỏi mắt', 'Mỏi mắt');
-    } else if (choices.includes('Phần Mềm Hệ Thống') || choices.includes('Phần Mềm Ứng Dụng') || choices.includes('phần mềm Hệ thống') || choices.includes('phần mềm Ứng dụng')) {
+    } else if (choices.includes('Phần mềm Hệ thống') || choices.includes('Phần mềm Ứng dụng')) {
         choices.length = 0;
-        choices.push('Phần Mềm Hệ Thống', 'Phần Mềm Ứng Dụng');
+        choices.push('Phần mềm Hệ thống', 'Phần mềm Ứng dụng');
+    } else if (choices.includes('Ứng dụng') || choices.includes('Hệ điều hành')) {
+        choices.length = 0;
+        choices.push('Ứng dụng', 'Hệ điều hành');
     } else if (choices.includes('Google') || choices.includes('Microsoft') || choices.includes('Apple')) {
         choices.length = 0;
         choices.push('Google', 'Microsoft', 'Apple');
+    } else if (choices.includes('Hàng hóa') || choices.includes('Dịch vụ')) {
+        choices.length = 0;
+        choices.push('Hàng hóa', 'Dịch vụ');
+    } else if (choices.includes('Thiết bị nhập') || choices.includes('Thiết bị xuất')) {
+        choices.length = 0;
+        choices.push('Thiết bị nhập', 'Thiết bị xuất');
     } else if (choices.length === 0) {
         choices.push('Đúng', 'Sai'); // Fallback default
     }
-
     
     const table = document.createElement('table');
     table.className = 'grid-table';
@@ -1077,35 +1094,35 @@ function renderMatching(q, container) {
     if (q.id === 'q67' && currentLevel === 2) {
         isCustomImageMatching = true;
         choices = [
-            { letter: 'a', val: 'Thông báo (Notification/Reminder)', label: 'Đáp án 1', img: 'level 2 chu de 1 cau 67 dap an 1 .jpg' },
-            { letter: 'b', val: 'Sự kiện cả ngày (All-day event)', label: 'Đáp án 2', img: 'level 2 chu de 1 cau 67 dap an 2 .jpg' },
-            { letter: 'c', val: 'Lời mời (Invite/Share)', label: 'Đáp án 3', img: 'level 2 chu de 1 cau 67 dap an 3 .jpg' },
-            { letter: 'd', val: 'Sự kiện lặp lại (Recurrence/Repeat)', label: 'Đáp án 4', img: 'level 2 chu de 1 cau 67 dap an 4 .jpg' }
+            { letter: 'a', val: 'Thông báo (Notification/Reminder)', label: '', img: './Picture/Level_2/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q67_a.jpg' },
+            { letter: 'b', val: 'Sự kiện cả ngày (All-day event)', label: '', img: './Picture/Level_2/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q67_b.jpg' },
+            { letter: 'c', val: 'Lời mời (Invite/Share)', label: '', img: './Picture/Level_2/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q67_c.jpg' },
+            { letter: 'd', val: 'Sự kiện lặp lại (Recurrence/Repeat)', label: '', img: './Picture/Level_2/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q67_d.jpg' }
         ];
     } else if (q.id === 'q5' && currentLevel === 1) {
         isCustomImageMatching = true;
         choices = [
-            { letter: 'a', val: 'level1_page_3_img_3_X7.jpg', label: 'Audio Port', img: 'level1_page_3_img_3_X7.jpg' },
-            { letter: 'b', val: 'level1_page_3_img_3_X8.jpg', label: 'USB Port', img: 'level1_page_3_img_3_X8.jpg' },
-            { letter: 'c', val: 'level1_page_3_img_3_X9.jpg', label: 'HDMI Port', img: 'level1_page_3_img_3_X9.jpg' },
-            { letter: 'd', val: 'level1_page_3_img_3_X10.jpg', label: 'Ethernet Port', img: 'level1_page_3_img_3_X10.jpg' },
-            { letter: 'e', val: 'level1_page_3_img_3_X11.jpg', label: 'Display Port', img: 'level1_page_3_img_3_X11.jpg' }
+            { letter: 'a', val: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q5_AudioPort.jpg', label: '', img: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q5_AudioPort.jpg' },
+            { letter: 'b', val: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q5_UsbPort.jpg', label: '', img: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q5_UsbPort.jpg' },
+            { letter: 'c', val: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q5_HdmiPort.jpg', label: '', img: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q5_HdmiPort.jpg' },
+            { letter: 'd', val: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q5_EthernetPort.jpg', label: '', img: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q5_EthernetPort.jpg' },
+            { letter: 'e', val: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q5_DisplayPort.jpg', label: '', img: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q5_DisplayPort.jpg' }
         ];
     } else if (q.id === 'q20' && currentLevel === 1) {
         isCustomImageMatching = true;
         choices = [
-            { letter: 'a', val: 'level1_page_8_img_3_X30.jpg', label: 'USB', img: 'level1_page_8_img_3_X30.jpg' },
-            { letter: 'b', val: 'level1_page_8_img_3_X31.jpg', label: 'Lightning', img: 'level1_page_8_img_3_X31.jpg' },
-            { letter: 'c', val: 'level1_page_8_img_3_X32.jpg', label: 'USB-C', img: 'level1_page_8_img_3_X32.jpg' },
-            { letter: 'd', val: 'level1_page_8_img_3_X33.jpg', label: 'Micro USB', img: 'level1_page_8_img_3_X33.jpg' }
+            { letter: 'a', val: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q20_Usb.jpg', label: '', img: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q20_Usb.jpg' },
+            { letter: 'b', val: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q20_Lightning.jpg', label: '', img: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q20_Lightning.jpg' },
+            { letter: 'c', val: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q20_UsbC.jpg', label: '', img: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q20_UsbC.jpg' },
+            { letter: 'd', val: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q20_MicroUsb.jpg', label: '', img: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q20_MicroUsb.jpg' }
         ];
     } else if (q.id === 'q21' && currentLevel === 1) {
         isCustomImageMatching = true;
         choices = [
-            { letter: 'a', val: 'level1_page_8_img_7_X34.jpg', label: 'B\u1ed9 x\u1eed l\u00fd trung t\u00e2m (CPU)', img: 'level1_page_8_img_7_X34.jpg' },
-            { letter: 'b', val: 'level1_page_8_img_7_X35.jpg', label: '\u1ed4 \u0111\u0129a c\u1ee9ng', img: 'level1_page_8_img_7_X35.jpg' },
-            { letter: 'c', val: 'level1_page_8_img_7_X39.jpg', label: 'Bo m\u1ea1ch ch\u1ee7', img: 'level1_page_8_img_7_X39.jpg' },
-            { letter: 'd', val: 'level1_page_8_img_7_X40.jpg', label: '\u1ed4 c\u1ee9ng th\u1ec3 r\u1eafn', img: 'level1_page_8_img_7_X40.jpg' }
+            { letter: 'a', val: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q21_Cpu.jpg', label: '', img: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q21_Cpu.jpg' },
+            { letter: 'b', val: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q21_HardDrive.jpg', label: '', img: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q21_HardDrive.jpg' },
+            { letter: 'c', val: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q21_Mainboard.jpg', label: '', img: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q21_Mainboard.jpg' },
+            { letter: 'd', val: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q21_Ram.jpg', label: '', img: './Picture/Level_1/Topic_1_Can_Ban_Ve_Cong_Nghe/t1_q21_Ram.jpg' }
         ];
     }
     
